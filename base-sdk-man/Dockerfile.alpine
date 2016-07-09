@@ -1,0 +1,7 @@
+FROM java:alpine
+RUN apk add --no-cache bash \ 
+	&& apk add --no-cache curl \ 
+	&& curl -s "https://get.sdkman.io" | sh \
+	&& source /root/.sdkman/bin/sdkman-init.sh
+
+CMD ["bash"]
