@@ -3,7 +3,7 @@
 ### Project objective
 The objective of this project is to showcase how the Netuitive JVM Agent (Zorka) can be used to monitor a simple Spring-Boot application
 running the Apache Tomcat server and H2 Database.  We'll showcase how to setup the JVM agent to capture runtime statistics on your JVM, Http
-and SQL stacks, along with how to automatically capture `slow` http or sql queries directly to a log for follow up / troubleshooting.
+and SQL stacks, along with how to automatically capture slow `http` or `sql` queries directly to a log for follow up / troubleshooting.
 
 ### Project setup
   - Latest spring-boot stack (currently v1.4.0-RELEASE) with:
@@ -43,31 +43,25 @@ Integrating the Netuitive JVM Agent requires adding the distribution and configu
     - `scripts = jvm.bsh, apache/tomcat.bsh, jdbc/h2.bsh`
   - **To enable sql tracing**, update the `zorka.properties` file and set the following properties to
     - `sql.tracer = yes`
-    - `sql.slow = yes`
-    - in millis, set appropriately, any query above this time will be considered slow
-        - `sql.slow.time = 100`
-    - `sql.error = yes`
-
-Enabling `sql.slow` and `sql.error` will produce two log files `sql-slow.log` and `sql-error.log` respectively with queries `trapped` by the agent
-that were above `sql.slow.time` or errors.
+  - **To enable slow sql queries to get captured**, update the `zorka.properties` file and set the following properties to
+    - `sql.slow = yes` - will produce a file `sql-slow.log`
+    - `sql.slow.time = 100` - in millis, set appropriately, any query above this time will be considered slow
+    - `sql.error = yes` - will produce a file `sql-error.log`
 
 Example output from `sql-slow.log`:
 
 2016-09-05 11:11:40 INFO sql.slow [`17ms`] jdbc:h2:~/test: `SELECT UPPER(VALUE) FROM INFORMATION_SCHEMA.SETTINGS WHERE NAME=?`
 
-
   - **To enable http tracing**, update the `zorka.properties` file and set the following properties to
     - `http.tracer = yes`
-    - `http.slow = yes`
-    - `http.params = no`
-    - in millis, set appropriately, any http req above this time will be considered slow
-        - `http.trace.time = 100`
-    - `http.error = yes`
-
-Enabling `http.slow` and `http.error` will produce two log files `http-slow.log` and `http-error.log` respectively with queries `trapped` by the agent
-that were above `http.trace.time`.
+  - **To enable slow http requests to get captured**, update the `zorka.properties` file and set the following properties to
+    - `http.slow = yes` - will produce a file `http-slow.log`
+    - `http.params = no` - don't log params
+    - `http.trace.time = 100` - in millis, set appropriately, any http req above this time will be considered slow
+    - `http.error = yes` - will produce a file `http-error.log`
 
 Example output from `http-slow.log`:
 
 2016-09-05 11:11:36 INFO http.slow [`5.68ms`] `/console/login.jsp` -> 200
 
+  - Finally, update `zorka.properties` with your netuitive api key and fire up the agent.
